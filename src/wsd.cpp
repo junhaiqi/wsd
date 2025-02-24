@@ -420,6 +420,7 @@ void WSD::para_decompose_for_ul_asm(const bool &p_adap, const int &thread_num) /
         std::vector<DemInfo> this_dem_res;
         combin_dem_res(total_dem_res_subseq, this_dem_res);
         total_dem_res[i] = this_dem_res;
+        fprintf(stderr, "Assembly %s is decomposed.\n", name.c_str());
     }
     print_dem_res(total_dem_res);
 }
