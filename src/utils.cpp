@@ -18,6 +18,7 @@ void read_fa(const char *fa_path, std::vector<Seq> &seqs)
     {
         std::string seq = ks->seq.s;
         std::string name = ks->name.s;
+        std::transform(seq.begin(), seq.end(), seq.begin(), ::toupper);
         seqs.push_back(Seq(name, seq));
     }
 }

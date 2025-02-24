@@ -3,7 +3,7 @@
 #include "ketopt.h"
 #include "version.h"
 
-void test1()
+void test1() // a example for using wsd in new project
 {
     const char *fa_path1 = "example/test_tems.fa";
     const char *fa_path2 = "example/test_ref.fa";
@@ -26,8 +26,14 @@ void test1()
     const int adap_max_cost = 10;
     const int adap_max_dist = 100;
     int batch_size = 1000;
+    bool adap_get_bs = 1;
+    int thread_num = 1;
+    bool asm_mode = 0;
     WSD ex1(ref_seqs, tem_seqs, mismatch, g, adap_max_cost, adap_max_dist, batch_size);
-    ex1.para_decompose(1, 1);
+    if (!asm_mode)
+        ex1.para_decompose(adap_get_bs, thread_num);
+    else
+        ex1.para_decompose_for_ul_asm(adap_get_bs, thread_num); // for ultralong tandem repeat assemblies
 }
 
 int main(int argc, char *argv[])
@@ -44,8 +50,9 @@ int main(int argc, char *argv[])
     int batch_size = 1000;
     bool adap_get_bs = 1;
     int thread_num = 1;
+    bool asm_mode = 0;
 
-    while ((c = ketopt(&o, argc, argv, 1, "m:t:d:c:b:a:M:G:", 0)) >= 0)
+    while ((c = ketopt(&o, argc, argv, 1, "m:t:d:c:b:a:A:M:G:", 0)) >= 0)
     {
         if (c == 'm')
         {
@@ -71,6 +78,9 @@ int main(int argc, char *argv[])
 
         else if (c == 't')
             thread_num = atoi(o.arg);
+
+        else if (c == 'A')
+            asm_mode = atoi(o.arg);
 
         else if (c == 'M')
         {
@@ -104,6 +114,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "  -b INT     Specify the batch size for fast wave extension [default = 1000] \n");
         fprintf(stderr, "  -a BOOL    Specify whether (1: yes, 0: no) to adaptively determine the batch size [default = 1]\n");
         fprintf(stderr, "  -t INT     Specify the thread number [default = 1]\n");
+        fprintf(stderr, "  -A BOOL    Specify whether (1: yes, 0: no) to decompose ultralong tandem repeat assemblies [default = 0]\n");
         fprintf(stderr, "  -M INT     Specify the mismatch penalty score [default = 1] \n");
         fprintf(stderr, "  -G INT     Specify the gap/insertion penalty score [default = 1]\n");
         return 1;
@@ -124,7 +135,6 @@ int main(int argc, char *argv[])
     std::vector<Seq> tem_seqs;
     std::vector<Seq> ref_seqs;
     std::vector<std::string> tem_lst;
-    std::string ref_seq;
     read_fa(tem_fa_path, tem_seqs);
     read_fa(argv[o.ind], ref_seqs);
     for (const Seq &item : tem_seqs)
@@ -137,7 +147,10 @@ int main(int argc, char *argv[])
     }
 
     WSD ex1(ref_seqs, tem_seqs, mismatch, g, adap_max_cost, adap_max_dist, batch_size);
-    ex1.para_decompose(adap_get_bs, thread_num);
+    if (!asm_mode)
+        ex1.para_decompose(adap_get_bs, thread_num);
+    else
+        ex1.para_decompose_for_ul_asm(adap_get_bs, thread_num);
 
     return 0;
 }

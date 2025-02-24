@@ -72,6 +72,7 @@ public:
     void waf_next(const int &s, const std::string &ref_seq, std::vector<offset_dict> &wave_list, std::vector<is_extend_dict> &lr_dia_lst);
     void backtrace(const std::string &ref_seq, std::vector<offset_dict> &wave_list, int &pelenty_score, const std::string &ref_name, const int &pos_offset, std::vector<DemInfo> &dem_res);
     void para_decompose(const bool &p_adap, const int &thread_num); // parallel decomsose
+    void para_decompose_for_ul_asm(const bool &p_adap, const int &thread_num);
 
 private:
     int p_tem_lst_len;
@@ -146,10 +147,61 @@ inline std::string get_true_tem_name(const std::string &name)
 
 inline std::string get_strand(const int &tem_idx, const int &tem_lst_len)
 {
-    // std::cout << "Tem_len: " << tem_lst_len << "," << static_cast<int>(tem_lst_len) / 2 << "," << tem_idx << "\n";
     if (tem_idx >= static_cast<int>(tem_lst_len) / 2)
         return "-";
     return "+";
+}
+
+inline void update_dem_info(std::vector<DemInfo> &dem_res, const int &offset)
+{
+    for (DemInfo &item : dem_res)
+    {
+        item.st_pos += offset;
+        item.end_pos += offset;
+    }
+}
+
+inline void get_subseq_set(const std::string &long_asm, const int &sub_seq_len, const int &overlap_len, std::vector<std::string> &sub_seq_vec)
+{
+    const int mv_len = sub_seq_len - overlap_len;
+    const int ref_len = static_cast<int>(long_asm.length());
+    const int loop_end = ref_len - sub_seq_len;
+    if (mv_len <= 0 || loop_end <= 0)
+    {
+        sub_seq_vec.emplace_back(long_asm);
+        return;
+    }
+
+    size_t i = 0;
+    for (i = 0; i <= loop_end; i += mv_len)
+    {
+        sub_seq_vec.emplace_back(long_asm.substr(i, sub_seq_len));
+    }
+
+    // std::cout << i << "\t" << long_asm.substr(i, sub_seq_len) << "\n";
+    std::string last_subseq = long_asm.substr(i + overlap_len, sub_seq_len);
+    sub_seq_vec.back() += last_subseq;
+}
+
+inline void combin_dem_res(std::vector<std::vector<DemInfo>> &subseq_res, std::vector<DemInfo> &total_res)
+{
+    size_t n = subseq_res.size();
+    for (size_t i = 0; i < n - 1; ++i)
+    {
+        subseq_res[i].pop_back();
+    }
+
+    size_t pos_offset = 0;
+    for (size_t i = 0; i < n; ++i)
+    {
+        size_t m = subseq_res[i].size();
+        for (size_t j = 0; j < m; ++j)
+        {
+            if (subseq_res[i][j].st_pos >= pos_offset)
+                total_res.emplace_back(subseq_res[i][j]);
+        }
+        pos_offset = total_res.back().end_pos;
+    }
 }
 
 #endif

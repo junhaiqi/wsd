@@ -1,12 +1,9 @@
 #include "wsd.h"
 #include <omp.h>
 
-int batch_size_factor = 3;
+int batch_size_factor = 2;
 void WSD::waf_for_decompose(const std::string &ref_seq, const bool &p_adap, const std::string &ref_name, std::vector<DemInfo> &dem_res)
 {
-
-    if (p_adap)
-        batch_size = p_max_tem_len * batch_size_factor; // `batch_size_factor` can be revised, default is 3 and it should be fine
 
     int pos_offset = 0;
     // std::cout << batch_size << "\n";
@@ -330,7 +327,7 @@ void WSD::backtrace(const std::string &ref_seq, std::vector<offset_dict> &wave_l
     }
 
     edit_dist_lst.push_back(edit_dist);
-    if ( out_pair_list.empty() )
+    if (out_pair_list.empty())
     {
         int ref_len = static_cast<int>(ref_seq.length());
         std::string strand = get_strand(out_pair.first, p_tem_lst_len);
@@ -375,7 +372,8 @@ void WSD::backtrace(const std::string &ref_seq, std::vector<offset_dict> &wave_l
 // float batch_overlap_factor = 0.1; // it decides the overlap length between two batch
 void WSD::para_decompose(const bool &p_adap, const int &thread_num)
 {
-
+    if (p_adap)
+        batch_size = p_max_tem_len * batch_size_factor; // `batch_size_factor` can be revised, default is 3 and it should be fine
     std::vector<std::vector<DemInfo>> total_dem_res(ref_seq_vec.size());
 #pragma omp parallel num_threads(thread_num)
     {
@@ -386,6 +384,42 @@ void WSD::para_decompose(const bool &p_adap, const int &thread_num)
             WSD::waf_for_decompose(ref_seq_vec[i].seq, p_adap, ref_seq_vec[i].name, dem_res);
             total_dem_res[i] = dem_res;
         }
+    }
+    print_dem_res(total_dem_res);
+}
+
+const int single_batch_size_factor = 1000;
+const int overlap_bach_size_factor = 10;
+// const int max_length_bais = 10; // Note: when postprocessing, discard some batchs that have abnormal length
+void WSD::para_decompose_for_ul_asm(const bool &p_adap, const int &thread_num) // developing...
+{
+    std::vector<std::vector<DemInfo>> total_dem_res(ref_seq_vec.size());
+    const int sub_len = single_batch_size_factor * p_max_tem_len;
+    const int olv_len = overlap_bach_size_factor * p_max_tem_len;
+
+    if (p_adap)
+        batch_size = p_max_tem_len * batch_size_factor;
+
+    for (size_t i = 0; i < ref_seq_vec.size(); ++i)
+    {
+        std::vector<std::string> sub_seq_vec;
+        get_subseq_set(ref_seq_vec[i].seq, sub_len, olv_len, sub_seq_vec);
+        std::vector<std::vector<DemInfo>> total_dem_res_subseq(sub_seq_vec.size());
+        std::string name = ref_seq_vec[i].name;
+// std::cout << ref_seq_vec[i].seq.size() << "\n";
+#pragma omp parallel for num_threads(thread_num)
+        for (size_t t = 0; t < sub_seq_vec.size(); ++t)
+        {
+            std::vector<DemInfo> dem_res = {};
+            WSD::waf_for_decompose(sub_seq_vec[t], p_adap, name, dem_res);
+            const int pos_offset = t * (sub_len - olv_len);
+            update_dem_info(dem_res, pos_offset);
+            total_dem_res_subseq[t] = dem_res;
+        }
+
+        std::vector<DemInfo> this_dem_res;
+        combin_dem_res(total_dem_res_subseq, this_dem_res);
+        total_dem_res[i] = this_dem_res;
     }
     print_dem_res(total_dem_res);
 }
