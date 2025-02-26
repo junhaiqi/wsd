@@ -43,10 +43,17 @@ void WSD::waf_for_decompose(const std::string &ref_seq, const bool &p_adap, cons
             if (pos_offset >= ref_seq.size())
                 break;
             sub_ref_seq = ref_seq.substr(pos_offset, batch_size);
+            // if (sub_ref_seq)
         }
         // num++;
     }
 
+    int l = dem_res.back().end_pos - dem_res.back().st_pos;
+    if (l < 3)
+    {
+        dem_res.pop_back();
+        dem_res.back().end_pos += l;
+    }
     // std::cout << "Num: " << num << "\n";
 }
 
@@ -388,12 +395,14 @@ void WSD::para_decompose(const bool &p_adap, const int &thread_num)
     print_dem_res(total_dem_res);
 }
 
-const int single_batch_size_factor = 1000;
+int single_batch_size_factor = 1000;
 const int overlap_bach_size_factor = 10;
 // const int max_length_bais = 10; // Note: when postprocessing, discard some batchs that have abnormal length
 void WSD::para_decompose_for_ul_asm(const bool &p_adap, const int &thread_num) // developing...
 {
     std::vector<std::vector<DemInfo>> total_dem_res(ref_seq_vec.size());
+    if (p_max_tem_len > 1000)
+        single_batch_size_factor = 100;
     const int sub_len = single_batch_size_factor * p_max_tem_len;
     const int olv_len = overlap_bach_size_factor * p_max_tem_len;
 
