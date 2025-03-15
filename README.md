@@ -16,7 +16,7 @@ cd wsd && make -j8  # C++11 required to compile
 
 ```
 
-## Overview of centroAnno
+## Overview of WSD
 WSD is a efficient wavefront-based algorithm for string decomposition problem (https://academic.oup.com/bioinformatics/article/36/Supplement_1/i93/5870498).
 
 ## Table of contents
