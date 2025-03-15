@@ -43,7 +43,7 @@ Options:
 ```
 
 ## Output
-The WSD output is a tsv file with columns: TR name/template name/alignment direction (``+" for forward, ``-" for reverse complement)/TR start/TR end/length/identity score, like:
+The WSD output is a tsv file with columns: TR name/template name/alignment direction ("+" for forward, "-" for reverse complement)/TR start/TR end/length/identity score, like:
 ```bash
 1       0       +       0       183     183     0.994536
 1       1       +       183     366     183     0.994536
