@@ -11,10 +11,20 @@ cd wsd && make -j8  # C++11 required to compile
 # Run on test data
 ./wsd example/test_ref.fa -m example/test_tems.fa
 
-# If you have a fasta file $ref.fa that load tandem repeats and a fasta file $tems.fa that load template sequences, you can run this command to obtain decomposition results in a tsv file $out.tsv  
+# If you have a fasta file $ref.fa that load tandem repeats (TRs) and a fasta file $tems.fa that load template sequences, you can run this command to obtain decomposition results in a tsv file $out.tsv  
 ./wsd $ref.fa -m $tems.fa >$out.tsv  
 
 ```
+
+## Overview of centroAnno
+WSD is a efficient wavefront-based algorithm for string decomposition problem (https://academic.oup.com/bioinformatics/article/36/Supplement_1/i93/5870498).
+
+## Table of contents
+  * [Usage](#usage)
+  * [Output](#output)
+  * [Acknowledgments](#acknowledgments)
+  * [License](#license)
+  * [Cite](#cite)
 
 ## Usage
 ```bash
@@ -31,3 +41,24 @@ Options:
   -M INT     Specify the mismatch penalty score [default = 1]
   -G INT     Specify the gap/insertion penalty score [default = 1]
 ```
+
+## Output
+The WSD output is a tsv file with columns: TR name/template name/alignment direction (``+" for forward, ``-" for reverse complement)/TR start/TR end/length/identity score, like:
+```bash
+1       0       +       0       183     183     0.994536
+1       1       +       183     366     183     0.994536
+1       2       +       366     549     183     0.994536
+1       3       +       549     732     183     0.994536
+1       4       +       732     915     183     0.994536
+1       5       +       915     1098    183     0.994536
+1       6       +       1098    1281    183     0.994536
+```bash
+
+## Acknowledgments
+None.
+
+## License 
+MIT License.
+
+## Cite
+None.
