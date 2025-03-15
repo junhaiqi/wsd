@@ -52,7 +52,7 @@ The WSD output is a tsv file with columns: TR name/template name/alignment direc
 1       4       +       732     915     183     0.994536
 1       5       +       915     1098    183     0.994536
 1       6       +       1098    1281    183     0.994536
-```bash
+```
 
 ## Acknowledgments
 None.
