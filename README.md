@@ -14,7 +14,7 @@ cd wsd && make -j8  # C++11 required to compile
 # If you have a fasta file $ref.fa that load tandem repeats (TRs) and a fasta file $tems.fa that load template sequences, you can run this command to obtain decomposition results in a tsv file $out.tsv  
 ./wsd $ref.fa -m $tems.fa >$out.tsv
 
-# Using 36 threads to decompose the ultra-long tandem repeats  
+# Using 36 threads to decompose the ultra-long tandem repeats (centromeres)  
 ./wsd $ref.fa -m $tems.fa -t36 -A1 >$out.tsv   
 
 ```
