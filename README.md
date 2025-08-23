@@ -20,7 +20,7 @@ cd wsd && make -j8  # C++11 required to compile
 ```
 
 ## Overview of WSD
-WSD is a efficient wavefront-based algorithm for string decomposition problem, When decomposing human centromere regions, WSD is, on average, 2 times faster than StringDecomposer (https://academic.oup.com/bioinformatics/article/36/Supplement_1/i93/5870498) and uses two orders of magnitude less memory. All of the benchmarking data is available at https://doi.org/10.6084/m9.figshare.28601708.
+WSD is a efficient wavefront-based algorithm for string decomposition problem, when decomposing human centromere regions, WSD is, on average, 2 times faster than StringDecomposer (https://academic.oup.com/bioinformatics/article/36/Supplement_1/i93/5870498) and uses two orders of magnitude less memory. All of the benchmarking data is available at https://doi.org/10.6084/m9.figshare.28601708.
 
 ## Table of contents
   * [Usage](#usage)
