@@ -49,7 +49,7 @@ void WSD::waf_for_decompose(const std::string &ref_seq, const bool &p_adap, cons
     }
 
     int l = dem_res.back().end_pos - dem_res.back().st_pos;
-    if (l < 3)
+    if (l < 5)
     {
         dem_res.pop_back();
         dem_res.back().end_pos += l;
@@ -433,3 +433,4 @@ void WSD::para_decompose_for_ul_asm(const bool &p_adap, const int &thread_num) /
     }
     print_dem_res(total_dem_res);
 }
+
