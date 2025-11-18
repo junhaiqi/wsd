@@ -4,9 +4,9 @@
 # Requirements
 WSD runs Linux and requires gcc 9.3.0+.
 
-# Install WSD
+# Install and quickly test WSD
 git clone https://github.com/junhaiqi/wsd.git
-cd wsd && make -j8  # C++11 required to compile
+cd wsd && bash test.sh  # C++11 required to compile, a successful/failed test will print: WSD test successfully!/WSD test failed!
 
 # Run on test data
 ./wsd example/test_ref.fa -m example/test_tems.fa
