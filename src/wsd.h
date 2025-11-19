@@ -49,6 +49,7 @@ public:
     int adap_max_dist;                         // extend this wave when the distance between its offset and best offset less than this value
     int batch_size;                            // set size of the batch in parallelization
     int p_max_tem_len = 0;                     // max length of temlate
+    int p_min_block_len = 10000000;            // min length of decomposition block
 
     WSD(const std::vector<Seq> &ref_seq_vec, const std::vector<Seq> &s_tem_seqs, const int &mismatch, const int &g, const int &adap_max_cost, const int &adap_max_dist, int &batch_size)
         : ref_seq_vec(ref_seq_vec), p_tem_lst_len(0), mismatch(mismatch), g(g), adap_max_cost(adap_max_cost), adap_max_dist(adap_max_dist), batch_size(batch_size)
@@ -63,7 +64,10 @@ public:
             int tem_len = static_cast<int>(tem_seq_lst[j].length());
             if (tem_len > p_max_tem_len)
                 p_max_tem_len = tem_len;
+            if (tem_len < p_min_block_len)
+                p_min_block_len = tem_len;
         }
+        p_min_block_len *= 0.1; // Note
     }
 
     void waf_for_decompose(const std::string &ref_seq, const bool &p_adap, const std::string &ref_name, std::vector<DemInfo> &dem_res);
