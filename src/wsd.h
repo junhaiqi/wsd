@@ -6,6 +6,8 @@
 #include <limits> // for std::numeric_limits
 #include <algorithm>
 #include <iomanip> // for std::fixed and std::setprecision
+#include <cstdint>
+#include <cstddef>
 #include "robin_hood.h"
 #include "utils.h"
 
@@ -207,5 +209,6 @@ inline void combin_dem_res(std::vector<std::vector<DemInfo>> &subseq_res, std::v
         pos_offset = total_res.back().end_pos;
     }
 }
+
 
 #endif
