@@ -20,7 +20,7 @@ cd wsd && bash test.sh  # C++11 required to compile, a successful/failed test wi
 ```
 
 ## Overview of WSD
-WSD is a efficient wavefront-based algorithm for string decomposition problem, when decomposing human centromere regions ([HORmon](https://doi.org/10.6084/m9.figshare.16755097) inferred monomers as templates), WSD is, on average, 2 times faster than [StringDecomposer](https://academic.oup.com/bioinformatics/article/36/Supplement_1/i93/5870498) and uses two orders of magnitude less memory. All of the benchmarking data is available at https://doi.org/10.6084/m9.figshare.28601708.
+WSD is a efficient wavefront-based algorithm for string decomposition problem, when decomposing human centromere regions ([HORmon](https://doi.org/10.6084/m9.figshare.16755097) inferred monomers as templates), WSD is, on average, 2 times faster than [StringDecomposer](https://academic.oup.com/bioinformatics/article/36/Supplement_1/i93/5870498) and uses two orders of magnitude less memory. All of the benchmarking data is available at [Figshare](https://doi.org/10.6084/m9.figshare.30818273).
 
 ## Advantages and Limitations
 Our results show that the performance advantage of WSD over StringDecomposer diminishes as divergence grows. Specifically, when divergence is less than 3%, WSD typically offers a speedup of more than 5 times. WSD loses its speed advantage when the divergence exceeds 20%.
