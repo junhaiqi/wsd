@@ -43,8 +43,10 @@ std::string get_rev_comp(const std::string &sequence)
             complement += 'C';
             break;
         default:
-            std::cerr << "Invalid character in sequence: " << sequence[i] << std::endl;
-            return "";
+            // std::cerr << "Invalid character in sequence: " << sequence[i] << std::endl;
+            // return "";
+            complement += 'N';
+            break;
         }
     }
     return complement;
