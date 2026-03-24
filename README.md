@@ -67,4 +67,15 @@ None.
 MIT License.
 
 ## Cite
-None.
+If you use WSD in your research, please cite our paper:
+
+Junhai Qi, Zhidong Yang, Ting Yu, Guojun Li. Enabling efficient and robust analysis of tandem repeats in genomic data using wavefront-based string decomposer. Genome Research (2026). doi:[10.1101/gr.281346.125](https://doi.org/10.1101/gr.281346.125)
+
+```bibtex
+@article{qi2026enabling,
+  title={Enabling efficient and robust analysis of tandem repeats in genomic data using wavefront-based string decomposer},
+  author={Qi, Junhai and Yang, Zhidong and Yu, Ting and Li, Guojun},
+  journal={Genome Research},
+  year={2026},
+  doi={10.1101/gr.281346.125}
+}
