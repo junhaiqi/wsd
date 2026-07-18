@@ -192,21 +192,43 @@ inline void get_subseq_set(const std::string &long_asm, const int &sub_seq_len, 
 inline void combin_dem_res(std::vector<std::vector<DemInfo>> &subseq_res, std::vector<DemInfo> &total_res)
 {
     size_t n = subseq_res.size();
+    if (n == 0)
+        return;
+
     for (size_t i = 0; i < n - 1; ++i)
     {
-        subseq_res[i].pop_back();
+        if (!subseq_res[i].empty())
+            subseq_res[i].pop_back();
     }
 
-    size_t pos_offset = 0;
     for (size_t i = 0; i < n; ++i)
     {
         size_t m = subseq_res[i].size();
         for (size_t j = 0; j < m; ++j)
         {
-            if (subseq_res[i][j].st_pos >= pos_offset)
-                total_res.emplace_back(subseq_res[i][j]);
+            DemInfo segment = subseq_res[i][j];
+            if (segment.end_pos <= segment.st_pos)
+                continue;
+
+            if (total_res.empty() || segment.st_pos >= total_res.back().end_pos)
+            {
+                total_res.emplace_back(segment);
+                continue;
+            }
+
+            // A segment from the next overlapping subsequence can straddle the
+            // end of the already accepted chain by a few bases.  The old merge
+            // discarded that whole segment because its start preceded the
+            // current end, leaving a monomer-sized uncovered interval.  Move
+            // the preceding boundary to the complete segment start and keep
+            // the segment when it advances the chain.
+            if (segment.end_pos > total_res.back().end_pos &&
+                segment.st_pos > total_res.back().st_pos)
+            {
+                total_res.back().end_pos = segment.st_pos;
+                total_res.emplace_back(segment);
+            }
         }
-        pos_offset = total_res.back().end_pos;
     }
 }
 

@@ -34,7 +34,7 @@ Our results show that the performance advantage of WSD over StringDecomposer dim
 
 ## Usage
 ```bash
-Version 1.0.1
+Version 1.0.2
 Usage: ./wsd [Options:] <ref.fa> -m <templates.fa>
 Options:
   -m STR     Specify the template file path with fasta type [required parameters]
